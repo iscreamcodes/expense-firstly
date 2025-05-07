@@ -1,0 +1,220 @@
+body {
+  margin: 0;
+  padding: 0;
+  
+}
+
+.container{
+
+  display: flex;
+  width: 100%;
+  color: #092414;
+  flex-direction: column;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  gap: 10px;
+}
+h1{
+  position: relative;
+}
+.contents{
+  width: 100%;
+  height: 80vh;
+   position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+h2{
+  color: white;
+  
+}
+.side{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: auto;
+  padding: 10px;
+  margin-right: 0px;
+  margin-left: 0px;
+  border: 1px solid black;
+  border-radius: 5%;
+  align-items: center;
+  padding-top: 60px;
+  background-color: #174e2d;
+}
+.main{
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 5%;
+  
+  
+}
+input{
+  align-self: flex-start;
+  margin: 10px;
+}
+.list{
+  width: auto;
+  margin: 10px;
+}
+table, th, td {
+  margin: 10px;
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 8px;
+  width: 100%;
+  table-layout: auto;
+  
+}
+ 
+th:nth-child(1),
+td:nth-child(1) {
+  width: 30%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 20%;
+}
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+.button-grid button {
+  background-color: white;
+  color: #174e2d;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 20%;
+  
+}
+
+.add-button button{
+  background-color: #174e2d;
+  color: white;
+  align-self: flex-start;
+  padding: 10px;
+  border-radius: 10%;
+}
+.menu-button {
+  display: none;
+}
+@media (max-width: 768px) {
+  .hide-menu {
+    display: none  !important;
+  }
+
+  .contents {
+    flex-direction: row;
+    width: auto; 
+  }
+  
+  .side {
+   display: none;
+   top: 0;
+   height: 100%;
+   z-index: 10;
+   border-radius: 0%;
+  }
+ .main{
+  width: 90%;
+  margin-top: 0px;
+  margin-left: 60px;
+  
+ }
+ .side.show {
+  display: flex;
+}
+.menu-button.sidey{
+  background-color: #174e2d;
+  color: white ;
+}
+.menu-button {
+  top: 95px;
+  left: 0;
+  display: block;
+  background-color: white;
+  color:  #174e2d;
+  border: none;
+  padding: 10px;
+  font-size: 18px;
+ 
+  margin-bottom: 10px;
+  cursor: pointer;
+  position: absolute;
+  z-index: 20;
+  
+}
+
+  .button-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 buttons per row */
+  }
+
+  .button-grid button {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-button {
+    position: fixed;
+    top: 30px;
+  }
+  .contents {
+    flex-direction: column;
+  }
+
+  .main {
+    transition: opacity 0.3s;
+  }
+
+  .main.inactive {
+    pointer-events: none;
+    opacity: 0.3;
+    filter: blur(1px);
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 5;
+  }
+  .button-grid {
+    grid-template-columns: 1fr; /* 1 button per row */
+   
+  }
+
+  .button-grid button {
+    font-size: 12px;
+    padding: 6px;
+  }
+  .side{
+    position: fixed;
+    left: -100%;
+    top: 5px;
+    width: 50%;
+    height: 100%;
+    background-color: #174e2d;
+    z-index: 10;
+    transition: left 0.3s ease-in-out;
+    opacity: 0;
+    transition: left 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  .side.show {
+    left: 0;
+    opacity: 1;
+  }
+}
