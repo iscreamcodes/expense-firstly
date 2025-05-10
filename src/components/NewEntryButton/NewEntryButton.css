@@ -1,0 +1,10 @@
+.new-entry-button{
+    width: 10rem;
+}
+button:hover {
+    transform: scale(1.05);
+  }
+button {
+    transition: transform 0.2s ease;
+  }
+  

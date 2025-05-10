@@ -1,64 +1,112 @@
 import React, { useState } from 'react';
 import './App.css';
+import ExpenseForm from './components/ExpenseForm/ExpenseForm';
+import ExpenseList from './components/ExpenseList/ExpenseList';
+import CategorySidebar from './components/CategorySidebar/CategorySidebar';
+import NewEntryButton from './components/NewEntryButton/NewEntryButton';
 
 function App() {
-
-  const [isSideVisible, setIsSideVisible] = useState(false);
-
+  const [isSideVisible , setIsSideVisible] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [expenses, setExpenses] = useState([]);
+  const [filteredExpenses, setFilteredExpenses] = useState([]);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [editingIndex, setEditingIndex] = useState(null);
   const toggleSidebar = () => setIsSideVisible(!isSideVisible);
   const hideSidebar = () => setIsSideVisible(false);
+
+  const handleAddExpense = (newExpense) => {
+    let updatedExpenses;
+    if (editingIndex !== null) {
+      // Update existing
+      updatedExpenses = [...expenses];
+      updatedExpenses[editingIndex] = newExpense;
+
+    } else {
+      // Add new 
+      console.log('j4t')
+      updatedExpenses = [...expenses, newExpense];
+    }
+    setExpenses(updatedExpenses);
+    setFilteredExpenses(updatedExpenses); // This is the key line!
+    setEditingIndex(null);
+    setShowForm(false);
+  };
+
   
+  const handleDelete = (index) => {
+    const updated = expenses.filter((_, i) => i !== index);
+    setExpenses(updated);
+    setFilteredExpenses(updated);
+  };
+
+  const handleEdit = (index) => {
+    setEditingIndex(index);
+    setShowForm(true);
+  };
+
+  const handleFilter = (filterValue) => {
+    if (!filterValue) {
+      setFilteredExpenses(expenses);
+      return;
+    }
+    const filtered = expenses.filter(expense => 
+      expense.date.includes(filterValue) ||
+      expense.item.toLowerCase().includes(filterValue.toLowerCase()) ||
+      expense.category.toLowerCase().includes(filterValue.toLowerCase())
+    );
+    setFilteredExpenses(filtered);
+  };
+
+   const handleSelectCategory = (category) => {
+    setActiveCategory(category);
+    if (category === 'All') {
+      setFilteredExpenses(expenses);
+    } else {
+      const filtered = expenses.filter(expense => expense.category === category);
+      setFilteredExpenses(filtered);
+    }
+    hideSidebar();
+  };
   return (
     <div className="container">
       <h1>Expense Tracker</h1>
-
-      
-    <button className={`menu-button ${isSideVisible ? 'sidey' : ''}`} onClick={toggleSidebar}>
+      <button className={`menu-button ${isSideVisible ? 'active' : ''}`} onClick={toggleSidebar}>
       ☰
     </button>
+    <div className="contents">
+      <CategorySidebar 
+        isVisible={isSideVisible}
+        onSelectCategory={handleSelectCategory}
+        onClose={hideSidebar}
+      />
+      <div className={`main ${isSideVisible ? 'inactive' : ''}`}>
+        {showForm ? (
+          <ExpenseForm 
+            onAddExpense={handleAddExpense} 
+            onCancel={() => {
+              setShowForm(false);
+              setEditingIndex(null); // Reset editing
+            }}
+            expenseToEdit={editingIndex !== null ? expenses[editingIndex] : null}
+          />
+        ) : (
+          <>
+            <ExpenseList 
+              expenses={filteredExpenses} 
+              onFilter={handleFilter}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+            <NewEntryButton onClick={() => {
+                setShowForm(true);
+            }} />
 
-
-      <div className="contents">
-      <div className={`side ${isSideVisible ? 'show' : ''}`}>
-          <h2>Category</h2>
-        
-          <div className="button-grid">
-            <button>Groceries</button>
-            <button>Toiletries</button>
-            <button>Outfits</button>
-            <button>Jewelry</button>
-            <button>Stationery</button>
-            <button>Cuttlery</button>
-          </div>
-        </div>
-
-        <div className={`main ${isSideVisible ? 'inactive' : ''}`}>
-          <input type="text" placeholder="Filter-by-date" />
-          <div className="list">
-            <table>
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Description</th>
-                  <th>Approximate Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Milk</td>
-                  <td>Just milk but not just any</td>
-                  <td>$100</td>
-                </tr>
-              </tbody>
-            </table>
-            <button>New Entry</button>
-          </div>
-          </div>
-          {isSideVisible && <div className="overlay" onClick={hideSidebar}></div>}
-        </div>
+          </>
+        )}
       </div>
-   
-  );
+      </div>
+  </div>
+);
 }
-
 export default App;
